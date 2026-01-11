@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  api:
+    build: .
+    container_name: ticket-api
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - mongo1
+      - mongo2
+      - mongo3
+    volumes:
+      - .:/app
+    command: npm run dev
+
+  mongo1:
+    image: mongo:6
+    container_name: mongo1
+    command: mongod --replSet rs0 --bind_ip_all
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo1-data:/data/db
+
+  mongo2:
+    image: mongo:6
+    container_name: mongo2
+    command: mongod --replSet rs0 --bind_ip_all
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo2-data:/data/db
+
+  mongo3:
+    image: mongo:6
+    container_name: mongo3
+    command: mongod --replSet rs0 --bind_ip_all
+    ports:
+      - "27019:27017"
+    volumes:
+      - mongo3-data:/data/db
+
+volumes:
+  mongo1-data:
+  mongo2-data:
+  mongo3-data:
